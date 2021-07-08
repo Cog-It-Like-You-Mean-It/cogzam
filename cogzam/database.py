@@ -1,4 +1,5 @@
 # Example data structure
+import pickle
 
 
 class Database:
@@ -31,11 +32,6 @@ class Database:
             # consider returning counts here or in notebook
         return song
 
-    '''def save_song(self, song_name, author):
-        # save song metadata with a unique ID
-        self.song_metadata[len(self.song_metadata)] = (song_name, author)
-        return len(self.song_metadata) # return the ID?'''
-
     def load_database(self):
         import pickle
 
@@ -45,7 +41,5 @@ class Database:
         return
 
     def save_database(self):
-
         with open("fingerprints.pkl", mode = "wb") as fingerprints_file:
-            pickle.dump(self.database, fingerprints_file)
-        return
+            pickle.dump(self.database, fingerprints_file, "wb"))
