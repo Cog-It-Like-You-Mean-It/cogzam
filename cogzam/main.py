@@ -1,7 +1,7 @@
 # pyright: reportMissingImports=false, reportUnusedVariable=warning, reportUntypedBaseClass=error
-from database import Database
-from fingerprinting import fingerprints
-from peaks import find_neighborhood, find_min_amp, local_peak_locations
+from .database import Database
+from .fingerprinting import fingerprints
+from .peaks import find_neighborhood, find_min_amp, local_peak_locations
 
 import numpy as np
 import librosa
@@ -20,7 +20,7 @@ import os
 
 import pickle
 from IPython.display import Audio
-from Analog_to_Digital import analog_to_digital
+from .Analog_to_Digital import analog_to_digital
 from microphone import record_audio
 
 # %matplotlib notebook
@@ -79,7 +79,7 @@ def load_directory(directory_path):
 
 def match_pickle(clips_directory, clips_name):
     with open(clips_directory + clips_name, mode="rb") as clips_file:
-    clips = pickle.load(clips_file)
+        clips = pickle.load(clips_file)
 
     for sample in clips:
         sample_fingerprints, times = generate_fingerprints(sample, 44100)
