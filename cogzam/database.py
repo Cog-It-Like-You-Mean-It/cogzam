@@ -22,18 +22,22 @@ class Database:
                 else:
                     self.database[f] = [(song_title, times[i])]
 
-    def search_song(self, fingerprints):
+    def search_song(self, fingerprints, times):
         # key: fingerprints, value: (song, time_of_occurance)
         # all fingerprints of a song are given, return most likely song
 
         # find the time_of_occurance for first fingerprint
         l = []
+        count = 0
         for f_peak in fingerprints:
             print(f_peak)
             for f in f_peak:
+
                 if f in self.database.keys():
                     for match in self.database[f]:
-                        l.append(match[0])
+                        l.append((match[0], match[1] - times[count]))
+
+            count += 1
 
             # consider returning counts here or in notebook
         c = Counter(l)
