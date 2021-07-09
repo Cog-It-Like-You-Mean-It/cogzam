@@ -30,7 +30,7 @@ class Database:
         l = []
         count = 0
         for f_peak in fingerprints:
-            print(f_peak)
+            # print(f_peak)
             for f in f_peak:
 
                 if f in self.database.keys():
