@@ -4,35 +4,40 @@ from collections import Counter
 
 
 class Database:
-    def __init__():
-        database = {}
+    database = {}
 
-    def store_fingerprint(self, fingerprints, song_title, times):
+    def __init__(self):
+        pass
+
+    def store_fingerprints(self, fingerprints, song_title, times):
         # key: (freq, neighbor_freq, time_delta)), value: (song, time_of_occurence)
         # store fingerprints of 1 song
 
         for i in range(len(fingerprints)):
-            f = fingerprints[i]
+            f_peak = fingerprints[i]  # group of fingerprints by the same peak
 
-            if f in self.database:
-                self.database[f].append((song_title, times[i]))
-            else:
-                self.database[f] = [(song_title, times[i])]
+            for f in f_peak:
+                if f in self.database.keys():
+                    self.database[f].append((song_title, times[i]))
+                else:
+                    self.database[f] = [(song_title, times[i])]
 
-    def search_fingerprint(self, fingerprints):
+    def search_song(self, fingerprints):
         # key: fingerprints, value: (song, time_of_occurance)
         # all fingerprints of a song are given, return most likely song
 
         # find the time_of_occurance for first fingerprint
         l = []
-        for f in fingerprints:
-            if f in self.database:
-                for match in self.database[f]:
-                    l.append(match[0])
+        for f_peak in fingerprints:
+            print(f_peak)
+            for f in f_peak:
+                if f in self.database.keys():
+                    for match in self.database[f]:
+                        l.append(match[0])
 
             # consider returning counts here or in notebook
         c = Counter(l)
-        return c.most_common(1)[0][0]
+        return c
 
     def load_database(self):
         import pickle
