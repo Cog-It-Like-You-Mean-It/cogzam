@@ -43,7 +43,7 @@ class Database:
         c = Counter(l)
         return c
 
-    def load_database(self, file_name):
+    def load_database(self):
         import pickle
 
         with open("fingerprints.pkl", mode="rb") as fingerprints_file:

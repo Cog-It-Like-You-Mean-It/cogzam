@@ -1,31 +1,11 @@
 # pyright: reportMissingImports=false, reportUnusedVariable=warning, reportUntypedBaseClass=error
-from database import Database
-from fingerprinting import fingerprints
-from peaks import find_neighborhood, find_min_amp, local_peak_locations
+from .fingerprinting import fingerprints
+from .peaks import find_neighborhood, find_min_amp, local_peak_locations
 
-import numpy as np
-import librosa
-# import matplotlib.pyplot as plt
-from IPython.display import Audio
-from typing import Union, Callable, Tuple, List
-from pathlib import Path
-
-import matplotlib.mlab as mlab
-
-from scipy.ndimage.filters import maximum_filter
-from scipy.ndimage.morphology import generate_binary_structure, binary_erosion
-from scipy.ndimage.morphology import iterate_structure
-
-import os
-
-import pickle
-from IPython.display import Audio
-from Analog_to_Digital import analog_to_digital
-from microphone import record_audio
 
 # %matplotlib notebook
 
-database = Database()
+# database = Database()
 
 
 def generate_fingerprints(samples, sampling_rate):
@@ -59,7 +39,7 @@ def generate_fingerprints(samples, sampling_rate):
     return (song_fingerprints, times)
 
 
-def import_song(path, song_name):
+def import_song(database, path, song_name):
     # sample the audio file
     samples, sampling_rate = librosa.load(path, sr=44100, mono=True)
 
@@ -68,18 +48,18 @@ def import_song(path, song_name):
     database.store_fingerprints(song_fingerprints, song_name, times)
 
 
-def load_directory(directory_path):
+def load_directory(database, directory_path):
     song_directory = directory_path
 
     for filename in os.listdir(song_directory):
         print("Importing: ", filename)
         file_path = song_directory + "\\" + filename
-        import_song(file_path, filename)
+        import_song(database, file_path, filename)
 
 
-def match_pickle(clips_directory, clips_name):
+def match_pickle(database, clips_directory, clips_name):
     with open(clips_directory + clips_name, mode="rb") as clips_file:
-    clips = pickle.load(clips_file)
+        clips = pickle.load(clips_file)
 
     for sample in clips:
         sample_fingerprints, times = generate_fingerprints(sample, 44100)
@@ -91,7 +71,7 @@ def match_pickle(clips_directory, clips_name):
     Audio(clips[0], rate=44100)
 
 
-def match_sample(sample):
+def match_sample(database, sample):
 
     sample_fingerprints, times = generate_fingerprints(sample, 44100)
     counts = database.search_song(sample_fingerprints, times)
@@ -99,7 +79,7 @@ def match_sample(sample):
     return counts.most_common(1)[0]
 
 
-def microphone_match():
+def microphone_match(database):
     # record samples
     listen_time = 10
 
@@ -109,9 +89,6 @@ def microphone_match():
 
     # times, digitial_signal = analog_to_digital(samples, sampling_rate=44100, bit_depth=16, duration=10)
 
-    result = match_sample(samples)
+    result = match_sample(database, samples)
 
     return result
-
-
-database.load_database()
